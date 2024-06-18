@@ -111,10 +111,6 @@ def shearhartatack(kk_rct,bb_rct):
     return tatebeku,yokobeku
 
 
-
-
-
-
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
