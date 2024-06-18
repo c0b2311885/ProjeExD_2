@@ -29,6 +29,8 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     if rct.top < 0 or HEIGHT < rct.bottom:  # 縦方向判定
         tate = False
     return yoko, tate
+
+
 def sum_check(sum_mv:list)->pg.Surface:
     """
     引数：sum_mv(移動ベクトルの合計)
