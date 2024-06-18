@@ -73,7 +73,7 @@ def bomb_runk()->tuple[int,pg.Surface]:
 
 def Gameover(screen:pg.Surface):
     """
-    引数：screen(pg.sruface)
+    引数：screen(pg.Surface)
     戻り値：なし
     ゲームオーバーの画面を表示
     """
