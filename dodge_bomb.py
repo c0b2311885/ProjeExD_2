@@ -124,7 +124,7 @@ def main():
     pg.draw.circle(bb_img,(255,0,0),(10,10),10)
     bb_rct=bb_img.get_rect()
     bb_rct.center=(random.randint(0,1599),random.randint(0,899))
-    vx,vy=+5,+5#横縦方向の速度ベクトル
+    vx,vy=+5,+5  #横縦方向の速度ベクトル
     bb_img.set_colorkey((0, 0, 0))
     font=pg.font.Font(None,80)
     x=0
