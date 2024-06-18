@@ -27,11 +27,14 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     return yoko, tate
 
 
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")    
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
+    kk_img2=pg.transform.flip(kk_img,True,False)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
     clock = pg.time.Clock()
@@ -43,6 +46,7 @@ def main():
     bb_img.set_colorkey((0, 0, 0))
     font=pg.font.Font(None,80)
     tmr = 0
+    kk_imgX=kk_img
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -63,12 +67,38 @@ def main():
             vx*= -1
         if not tate:
             vy*=-1
+        kk_imgX=sum_check(sum_mv)
         screen.blit(bb_img,bb_rct)
-        screen.blit(kk_img, kk_rct)
+        screen.blit(kk_imgX, kk_rct)
+        if kk_rct.colliderect(bb_rct):
+            return
         pg.display.update()
         tmr += 1
         clock.tick(50)
-
+def sum_check(sum_mv:list)->pg.Surface:
+    """
+    引数：sum_mv(移動ベクトルの合計)
+    戻り値：こうかとんの画像
+    sum_mvによって戻り値のこうかとんの画像が変化する。
+    """
+    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
+    kk_img2=pg.transform.flip(kk_img,True,False)
+    kk_dict={ #移動方向の辞書
+        (0,-5):pg.transform.rotozoom(kk_img2,90,1.0),
+        (5,-5): pg.transform.rotozoom(kk_img2,45,1.0),
+        (5,0):pg.transform.rotozoom(kk_img2,0,1.0),
+        (5,5):pg.transform.rotozoom(kk_img2,-45,1.0),
+        (0,5):pg.transform.rotozoom(kk_img2,-90,1.0),
+        (-5,5):pg.transform.rotozoom(kk_img,45,1.0),
+        (-5,0):pg.transform.rotozoom(kk_img,0,1.0),
+        (-5,-5):pg.transform.rotozoom(kk_img,-45,1.0)
+    }
+    if sum_mv == [0,0]:
+        kk_imgX=pg.image.load("fig/pg_bg.jpg")
+        kk_imgX=pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
+    else:
+        kk_imgX = kk_dict[tuple(sum_mv)]
+    return kk_imgX
 
 
 
