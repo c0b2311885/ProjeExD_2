@@ -2,6 +2,7 @@ import os
 import sys
 import pygame as pg
 import random
+import math
 
 
 WIDTH, HEIGHT = 1600, 900
@@ -85,10 +86,27 @@ def Gameover(screen:pg.Surface):
     kn_rect2 = text.get_rect(center=(1200, 450))
     screen.blit(kn_img,kn_rect)
     screen.blit(kn_img,kn_rect2) 
+    
     screen.set_alpha(150)
     
     pg.display.update()
     pg.time.wait(2500)
+
+def shearhartatack(kk_rct,bb_rct):
+    yokobeku=(kk_rct[0]-bb_rct[0])**2
+    tatebeku=(kk_rct[1]-bb_rct[1])**2
+    norm=math.sqrt(yokobeku+tatebeku)
+    targetnorm=math.sqrt(50)
+    wari=norm/targetnorm
+    tatebeku*=wari
+    yokobeku*=wari
+    if norm<300:
+        tatebeku=1
+        yokobeku=1
+    return tatebeku,yokobeku
+
+
+
 
 
 
@@ -145,6 +163,7 @@ def main():
             Gameover(screen)
             return
         pg.display.update()
+        print(bb_rct)
         tmr += 1
         clock.tick(50)
 
