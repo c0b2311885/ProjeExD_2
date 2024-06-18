@@ -1,9 +1,16 @@
 import os
 import sys
 import pygame as pg
+import random
 
 
 WIDTH, HEIGHT = 1600, 900
+key_dict={#移動量の辞書
+    pg.K_UP:(0,-5),
+    pg.K_DOWN:(0,5),
+    pg.K_LEFT:(-5,0),
+    pg.K_RIGHT:(5,0)
+    }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -15,25 +22,19 @@ def main():
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
     clock = pg.time.Clock()
+    font=pg.font.Font(None,80)
     tmr = 0
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
         screen.blit(bg_img, [0, 0]) 
-
         key_lst = pg.key.get_pressed()
-        key_dict={"pg.k_UP":(0,-5),"pg.K_DOWN":(0,5),"pg.K_LEFT":(-5,0),"pg.K_RIGHT":(5,0)}
-    
         sum_mv = [0, 0]
-        if key_lst[pg.K_UP]:
-            sum_mv[1] -= 5
-        if key_lst[pg.K_DOWN]:
-            sum_mv[1] += 5
-        if key_lst[pg.K_LEFT]:
-            sum_mv[0] -= 5
-        if key_lst[pg.K_RIGHT]:
-            sum_mv[0] += 5
+        for k,v in key_dict.items():
+            if key_lst[k]:
+                sum_mv[0] += v[0]
+                sum_mv[1] += v[1]
         kk_rct.move_ip(sum_mv)
         screen.blit(kk_img, kk_rct)
         pg.display.update()
