@@ -12,8 +12,9 @@ key_dict={#移動量の辞書
     pg.K_LEFT:(-5,0),
     pg.K_RIGHT:(5,0)
     }
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     """
     引数：こうかとんRect，または，爆弾Rect
@@ -153,6 +154,7 @@ def main():
             vx*= -1
         if not tate:
             vy*=-1
+        vvx,vvy=shearhartatack(kk_rct,bb_rct)
         kk_imgX=sum_check(sum_mv)
         x+=1
         txt=font.render("SCORE"+str(x),True,(0,0,0))
