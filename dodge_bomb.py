@@ -65,6 +65,33 @@ def bomb_runk()->tuple[int,pg.Surface]:
         bb_imgs.append(bb_img)
     return accs,bb_imgs
 
+def Gameover(screen:pg.Surface):
+    """
+    引数：screen(pg.sruface)
+    戻り値：なし
+    ゲームオーバーの画面を表示
+    """
+    sikaku = pg.Surface((1600, 900), pg.SRCALPHA)
+    sikaku.fill((0, 0, 0, 150))  # 半透明の黒
+    screen.blit(sikaku, (0, 0))
+    
+    font = pg.font.Font(None, 100)
+    text = font.render("Game Over", True, (255, 255, 255))
+    text_rect = text.get_rect(center=(800, 450))
+    screen.blit(text, text_rect)
+
+    kn_img=bg_img = pg.image.load("fig/7.png")
+    kn_rect = kn_img.get_rect(center=(550, 450))
+    kn_rect2 = text.get_rect(center=(1200, 450))
+    screen.blit(kn_img,kn_rect)
+    screen.blit(kn_img,kn_rect2) 
+    screen.set_alpha(150)
+    
+    pg.display.update()
+    pg.time.wait(2500)
+
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -115,6 +142,7 @@ def main():
         screen.blit(kk_imgX, kk_rct)
         screen.blit(txt,[200,100])
         if kk_rct.colliderect(bb_rct):
+            Gameover(screen)
             return
         pg.display.update()
         tmr += 1
