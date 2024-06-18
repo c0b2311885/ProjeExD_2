@@ -15,6 +15,8 @@ key_dict={#移動量の辞書
 
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+
 def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     """
     引数：こうかとんRect，または，爆弾Rect
