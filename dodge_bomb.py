@@ -25,56 +25,6 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     if rct.top < 0 or HEIGHT < rct.bottom:  # 縦方向判定
         tate = False
     return yoko, tate
-
-
-
-
-def main():
-    pg.display.set_caption("逃げろ！こうかとん")
-    screen = pg.display.set_mode((WIDTH, HEIGHT))
-    bg_img = pg.image.load("fig/pg_bg.jpg")    
-    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
-    kk_img2=pg.transform.flip(kk_img,True,False)
-    kk_rct = kk_img.get_rect()
-    kk_rct.center = 900, 400
-    clock = pg.time.Clock()
-    bb_img = pg.Surface((20, 20))
-    pg.draw.circle(bb_img,(255,0,0),(10,10),10)
-    bb_rct=bb_img.get_rect()
-    bb_rct.center=(random.randint(0,1600),random.randint(0,900))
-    vx,vy=+5,+5#横縦方向の速度ベクトル
-    bb_img.set_colorkey((0, 0, 0))
-    font=pg.font.Font(None,80)
-    tmr = 0
-    kk_imgX=kk_img
-    while True:
-        for event in pg.event.get():
-            if event.type == pg.QUIT: 
-                return
-        screen.blit(bg_img, [0, 0]) 
-        key_lst = pg.key.get_pressed()
-        sum_mv = [0, 0]
-        for k,v in key_dict.items():
-            if key_lst[k]:
-                sum_mv[0] += v[0]
-                sum_mv[1] += v[1]
-        kk_rct.move_ip(sum_mv)
-        if check_bound(kk_rct)!=(True,True):
-            kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
-        bb_rct.move_ip(vx,vy)
-        yoko,tate=check_bound(bb_rct)
-        if not yoko:
-            vx*= -1
-        if not tate:
-            vy*=-1
-        kk_imgX=sum_check(sum_mv)
-        screen.blit(bb_img,bb_rct)
-        screen.blit(kk_imgX, kk_rct)
-        if kk_rct.colliderect(bb_rct):
-            return
-        pg.display.update()
-        tmr += 1
-        clock.tick(50)
 def sum_check(sum_mv:list)->pg.Surface:
     """
     引数：sum_mv(移動ベクトルの合計)
@@ -99,6 +49,76 @@ def sum_check(sum_mv:list)->pg.Surface:
     else:
         kk_imgX = kk_dict[tuple(sum_mv)]
     return kk_imgX
+
+def bomb_runk()->tuple[int,pg.Surface]:
+    """
+    引数：なし
+    戻り値：速度のリストと爆弾の画像のリストのタプル
+    1~10段階までのそれぞれの値のリストを作って返す関数
+    """
+    accs=[a for a in range(1,11)]
+    bb_imgs=[]
+    for r in range(1,11):
+        bb_img=pg.Surface((20*r,20*r))
+        pg.draw.circle(bb_img,(255,0,0),(10*r,10*r),10*r)
+        bb_img.set_colorkey((0, 0, 0))
+        bb_imgs.append(bb_img)
+    return accs,bb_imgs
+
+def main():
+    pg.display.set_caption("逃げろ！こうかとん")
+    screen = pg.display.set_mode((WIDTH, HEIGHT))
+    bg_img = pg.image.load("fig/pg_bg.jpg")    
+    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
+    kk_img2=pg.transform.flip(kk_img,True,False)
+    kk_rct = kk_img.get_rect()
+    kk_rct.center = 900, 400
+    clock = pg.time.Clock()
+    bb_img = pg.Surface((20, 20))
+    pg.draw.circle(bb_img,(255,0,0),(10,10),10)
+    bb_rct=bb_img.get_rect()
+    bb_rct.center=(random.randint(0,1599),random.randint(0,899))
+    vx,vy=+5,+5#横縦方向の速度ベクトル
+    bb_img.set_colorkey((0, 0, 0))
+    font=pg.font.Font(None,80)
+    x=0
+    tmr = 0
+    kk_imgX=kk_img
+    avx=0
+    while True:
+        for event in pg.event.get():
+            if event.type == pg.QUIT: 
+                return
+        screen.blit(bg_img, [0, 0]) 
+        key_lst = pg.key.get_pressed()
+        sum_mv = [0, 0]
+        for k,v in key_dict.items():
+            if key_lst[k]:
+                sum_mv[0] += v[0]
+                sum_mv[1] += v[1]
+        kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct)!=(True,True):
+            kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
+        accs,bb_imgs=bomb_runk()
+        avx=vx*accs[min(tmr//500,9)]
+        bb_img=bb_imgs[min(tmr//500,9)]
+        bb_rct.move_ip(avx,vy)
+        yoko,tate=check_bound(bb_rct)
+        if not yoko:
+            vx*= -1
+        if not tate:
+            vy*=-1
+        kk_imgX=sum_check(sum_mv)
+        x+=1
+        txt=font.render("SCORE"+str(x),True,(0,0,0))
+        screen.blit(bb_img,bb_rct)
+        screen.blit(kk_imgX, kk_rct)
+        screen.blit(txt,[200,100])
+        if kk_rct.colliderect(bb_rct):
+            return
+        pg.display.update()
+        tmr += 1
+        clock.tick(50)
 
 
 
