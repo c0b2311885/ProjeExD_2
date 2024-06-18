@@ -22,6 +22,12 @@ def main():
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
     clock = pg.time.Clock()
+    bb_img = pg.Surface((20, 20))
+    pg.draw.circle(bb_img,(255,0,0),(10,10),10)
+    bb_rect=bb_img.get_rect()
+    bb_rect.center=(random.randint(0,1600),random.randint(0,900))
+    vx,vy=+5,+5#横縦方向の速度ベクトル
+    bb_img.set_colorkey((0, 0, 0))
     font=pg.font.Font(None,80)
     tmr = 0
     while True:
@@ -36,6 +42,8 @@ def main():
                 sum_mv[0] += v[0]
                 sum_mv[1] += v[1]
         kk_rct.move_ip(sum_mv)
+        bb_rect.move_ip(vx,vy)
+        screen.blit(bb_img,bb_rect)
         screen.blit(kk_img, kk_rct)
         pg.display.update()
         tmr += 1
